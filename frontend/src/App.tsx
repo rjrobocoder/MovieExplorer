@@ -1,30 +1,20 @@
 import React, {useEffect, useState} from 'react';
-import type {PropsWithChildren} from 'react';
 import {
   FlatList,
   Image,
   Pressable,
   SafeAreaView,
-  ScrollView,
   StatusBar,
   StyleSheet,
   Text,
   TextInput,
-  useColorScheme,
   View,
 } from 'react-native';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
 function App(): JSX.Element {
   const [searchTxt, setSearchTxt] = useState<string>('');
-  const [movieList, setMovieList] = useState<Movie[]>();
+  const [movieList, setMovieList] = useState<Movie[]>([]);
+  const [filteredMovieList, setFilteredMovieList] = useState<Movie[]>([]);
 
   const fetchMovieList = () => {
     const options = {
@@ -42,19 +32,23 @@ function App(): JSX.Element {
     )
       .then(response => response.json())
       .then(response => {
-        console.log(response);
         setMovieList(response?.results);
+        setFilteredMovieList(response?.results);
       })
       .catch(err => console.error(err));
   };
 
-  const searchMovie = () => {
-    const filterMovies = movieList?.filter((item) => (
-      item.original_title?.toLowerCase().includes(searchTxt.toLowerCase())
-    ))
+  const searchMovie = (text: string) => {
+    setSearchTxt(text);
 
-    setMovieList(filterMovies)
-  }
+    // console.log("Test data")
+    // console.log(movieList)
+    const filterMovies = movieList.filter(item => {
+      return item?.original_title?.toLowerCase().includes(text.toLowerCase());
+    });
+
+    setFilteredMovieList(filterMovies);
+  };
 
   const tilePressed = () => {};
 
@@ -70,17 +64,14 @@ function App(): JSX.Element {
           <TextInput
             style={styles.searchBar}
             value={searchTxt}
-            onChangeText={(text) => {
-              setSearchTxt(text)
-              searchMovie
-            }}
+            onChangeText={text => searchMovie(text)}
             placeholder="Search here"
           />
         </View>
         <View>
           <FlatList
             numColumns={1}
-            data={movieList}
+            data={filteredMovieList}
             renderItem={({item}) => (
               <Pressable style={styles.tileBtn} onPress={() => tilePressed()}>
                 <View style={styles.tileWrapper}>
@@ -134,7 +125,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'red',
     marginBottom: 10,
     borderRadius: 10,
-    overflow: 'hidden'
+    overflow: 'hidden',
   },
   tileWrap: {},
   tileImage: {

@@ -121,6 +121,14 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     borderRadius: 10,
     overflow: 'hidden',
+    elevation: 3,
+    shadowOffset: {
+      width: 2,
+      height: 2,
+    },
+    shadowColor: '#333',
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
   },
   tileWrap: {},
   tileImage: {

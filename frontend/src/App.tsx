@@ -16,26 +16,18 @@ function App(): JSX.Element {
   const [movieList, setMovieList] = useState<Movie[]>([]);
   const [filteredMovieList, setFilteredMovieList] = useState<Movie[]>([]);
 
-  const fetchMovieList = () => {
-    const options = {
-      method: 'GET',
-      headers: {
-        accept: 'application/json',
-        Authorization:
-          'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkNTFlNTNlZGFiZjlhZjc1NjkwMjYwMzgxNmRkYzgzZCIsInN1YiI6IjY1NmVjN2I1ODg2MzQ4MDE0ZDg1Y2JiMyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.O6o37VWCHSm5v7v1MVwxOqE6IYZ6fX5kXguTx5zRqp4',
-      },
-    };
+  const API_KEY = 'd51e53edabf9af756902603816ddc83d'; //TODO: add to env
 
-    fetch(
-      'https://api.themoviedb.org/3/movie/popular?language=en-US&page=1',
-      options,
-    )
+  const fetchMovieList = () => {
+    const url = `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=en-US&page=1`;
+
+    fetch(url)
       .then(response => response.json())
-      .then(response => {
-        setMovieList(response?.results);
-        setFilteredMovieList(response?.results);
+      .then(data => {
+        setMovieList(data?.results);
+        setFilteredMovieList(data?.results);
       })
-      .catch(err => console.error(err));
+      .catch(error => console.error(error));
   };
 
   const searchMovie = (text: string) => {
@@ -77,7 +69,7 @@ function App(): JSX.Element {
                 <View style={styles.tileWrapper}>
                   <Image
                     source={{
-                      uri: 'https://images.unsplash.com/32/Mc8kW4x9Q3aRR3RkP5Im_IMG_4417.jpg?ixid=M3wxMjA3fDB8MXxzZWFyY2h8MTZ8fGJhY2tncm91bmQlMjBpbWFnZXxlbnwwfHx8fDE3MDE3MDc5Mjh8MA&ixlib=rb-4.0.3',
+                      uri: `https://image.tmdb.org/t/p/w500/${item.poster_path}`,
                     }}
                     style={styles.tileImage}
                   />

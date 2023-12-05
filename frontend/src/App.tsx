@@ -56,32 +56,37 @@ function App(): JSX.Element {
           <TextInput
             style={styles.searchBar}
             value={searchTxt}
+            maxLength={20}
+            clearButtonMode="always"
             onChangeText={text => searchMovie(text)}
             placeholder="Search here"
           />
         </View>
-        <View>
-          <FlatList
-            numColumns={1}
-            data={filteredMovieList}
-            renderItem={({item}) => (
-              <Pressable style={styles.tileBtn} onPress={() => tilePressed()}>
-                <View style={styles.tileWrapper}>
-                  <Image
-                    source={{
-                      uri: `https://image.tmdb.org/t/p/w500/${item.poster_path}`,
-                    }}
-                    style={styles.tileImage}
-                  />
-                  <View>
-                    <Text>{item.original_title}</Text>
-                    <Text numberOfLines={3}>{item.overview}</Text>
-                  </View>
+      </View>
+      <View>
+        <FlatList
+          style={styles.list}
+          numColumns={1}
+          data={filteredMovieList}
+          renderItem={({item}) => (
+            <Pressable style={styles.tileBtn} onPress={() => tilePressed}>
+              <View style={styles.tileWrapper}>
+                <Image
+                  source={{
+                    uri: `https://image.tmdb.org/t/p/w500/${item.poster_path}`,
+                  }}
+                  style={styles.tileImage}
+                />
+                <View style={styles.tileTextWrapper}>
+                  <Text style={styles.tileTitle}>{item.original_title}</Text>
+                  <Text style={styles.tileOverview} numberOfLines={3}>
+                    {item.overview}
+                  </Text>
                 </View>
-              </Pressable>
-            )}
-          />
-        </View>
+              </View>
+            </Pressable>
+          )}
+        />
       </View>
     </SafeAreaView>
   );
@@ -94,17 +99,14 @@ const styles = StyleSheet.create({
     paddingTop: 16,
   },
   searchBarWrapper: {
-    backgroundColor: '#3C40C6',
-    marginBottom: 16,
-    // height: 100,
+    marginBottom: 24,
   },
   searchBar: {
     height: 60,
-    // backgroundColor: '#534274',
+    backgroundColor: '#E5E4EA',
     borderRadius: 10,
     fontSize: 18,
     paddingHorizontal: 10,
-    // marginBottom: 15,
   },
   movieTile: {
     height: 20,
@@ -112,9 +114,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#324352',
   },
   tileBtn: {
-    // height: 50,
+    height: '100%',
     width: '100%',
-    backgroundColor: 'red',
+    flex: 1,
+    backgroundColor: '#EAF0F1',
     marginBottom: 10,
     borderRadius: 10,
     overflow: 'hidden',
@@ -126,8 +129,25 @@ const styles = StyleSheet.create({
   },
   tileWrapper: {
     flex: 1,
-    marginBottom: 5,
     flexDirection: 'row',
+  },
+  list: {
+    paddingHorizontal: 16,
+    marginBottom: 200,
+  },
+
+  tileTextWrapper: {
+    flex: 1,
+    padding: 10,
+  },
+  tileTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  tileOverview: {
+    fontSize: 14,
+    color: 'gray',
   },
 });
 
